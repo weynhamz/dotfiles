@@ -1,0 +1,5 @@
+set vertical-split = yes
+bind diff <Up> move-up 
+bind diff <Down> move-down
+bind diff k previous
+bind diff j next
