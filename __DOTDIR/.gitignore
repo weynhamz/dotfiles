@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+.vagrant/
+*.swp
+tags
+README.local.md

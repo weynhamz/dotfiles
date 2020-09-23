@@ -1,0 +1,81 @@
+[gc]
+    auto = 0
+    autoDetach = false
+[core]
+    fileMode = false
+    tabwidth = 4
+    quotepath = false
+    whitespace = fix,-indent-with-non-tab,-indent-with-tab,trailing-space,cr-at-eol
+    excludesfile = ~/.gitignore
+[http]
+    postBuffer = 524288000
+[color]
+    ui = true
+[color "diff"]
+    old = red
+    new = green
+    func = blue bold
+    meta = yellow bold
+    frag = magenta bold
+    whitespace = red reverse
+[color "status"]
+    branch = red bold
+    untracked = magenta
+[color "branch"]
+    local = green
+    remote = yellow
+    current = green bold
+[alias]
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+    cl = reset --hard
+    br = branch
+    st = status
+    co = checkout
+    cp = cherry-pick
+    gc = gc --no-prune
+    a = add
+    aa = add -A
+    cm = commit
+    cmm = commit -m
+    cmam = commit --amend
+    df = diff -M
+    dfc = diff --cached -M
+    dft = difftool
+    mg = merge
+    mgt = mergetool
+    mgnf = merge --no-ff
+    rb = rebase
+    rbi = rebase -i
+    rbs = rebase --skip
+    rba = rebase --abort
+    rbc = rebase --continue
+    rb-aic = rebase --ignore-date
+    rb-cia = rebase --committer-date-is-author-date
+[push]
+    default = upstream
+[transfer]
+    fsckObjects = false
+
+
+
+
+[diff]
+    tool = here
+[merge]
+    tool = here
+[difftool]
+    prompt = false
+[difftool "here"]
+    cmd = "vim -d -b $LOCAL $REMOTE"
+[mergetool]
+    prompt = true
+    keepBackup = false
+[mergetool "here"]
+    cmd = "vim \"$PWD/$BASE\" \
+        +\":set buftype=nowrite\" \
+        +\":vertical belowright diffsplit $PWD/$REMOTE\" \
+        +\":set buftype=nowrite\" \
+        +\":botright diffsplit $PWD/$LOCAL\" \
+        +\":set buftype=nowrite\" \
+        +\":vertical belowright diffsplit $PWD/$MERGED\" \
+        +\":wincmd l\""
