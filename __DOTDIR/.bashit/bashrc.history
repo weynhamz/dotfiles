@@ -1,0 +1,55 @@
+#
+# ~/.bashrc.history
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+#
+# History Settings
+#
+
+alias clean_history='cat ~/.bash_history | sed '\''s:\s$::'\'' | sed '\''$!N;s/\n/ /'\'' | sort -s -k 2 | sed -n '\''x; /^$/ {x;p;x;d;}; G; /\(#[0-9]*\) \(.*\)\n\(#[0-9]*\) \2$/ !{ s/^[^\n]*\n\(.*\)$/\1/; p; }; d'\'' | sort -s | sed '\''s/^\(#[0-9]*\) /\1\n/'\'' > "$(realpath ~/.bash_history).bak" && mv "$(realpath ~/.bash_history)"{.bak,}'
+alias split_history='cat ~/.bash_history | sed '\''s:\s$::'\'' | sed '\''$!N;s/\n/ /'\'' | parallel '\''type $(echo {} | sed "s/^#[0-9]*\s\(sudo \)*//" | cut -d" " -f1) &>/dev/null && echo {} | sed "s/^\(#[0-9]*\) /\1\n/" >> bash_history || echo {} | sed "s/^\(#[0-9]*\) /\1\n/" >> bash_history.bad'\'''
+
+shopt -s histreedit
+shopt -s histverify
+shopt -s histappend
+
+export HISTSIZE=100000000
+export HISTFILESIZE=200000000
+export HISTIGNORE="&:??:[ ]*:exit:kill -9 *:history -d *"
+export HISTCONTROL=erasedups:ignoreboth
+export HISTTIMEFORMAT='%Y-%m-%d %T '
+
+# Never use history -c manually, otherwise the entire
+# history file will be emptied.
+reload_history() {
+    hash md5sum &>/dev/null || {
+        echo "Something odd happened, check your PATH env."
+        return
+    }
+    local HISTHASH_NEW=`md5sum $HOME/.bash_history | cut -d' ' -f1`
+    if [ "$HISTHASH" = "$HISTHASH_NEW" ]; then
+        history -w
+        # This is necessay because we need
+        # to clear the last append signture
+        history -c
+        history -r
+    else
+        HISTTEMP=`mktemp`
+        history -a $HISTTEMP
+        history -c
+        history -r
+        history -r $HISTTEMP
+        history -w
+        rm $HISTTEMP
+    fi
+    HISTHASH=`md5sum $HOME/.bash_history | cut -d' ' -f1`
+}
+
+#PROMPT_COMMAND="${PROMPT_COMMAND#trap \'\' DEBUG;}"
+#PROMPT_COMMAND="${PROMPT_COMMAND%
+#trap reload_hisotry DEBUG}"
+#PROMPT_COMMAND="trap '' DEBUG;$PROMPT_COMMAND
+#trap reload_history DEBUG"

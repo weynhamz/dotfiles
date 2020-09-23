@@ -1,0 +1,26 @@
+#
+# ~/.bashrc.git
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+
+alias git-submit-patch='LC_ALL=C git send-email --annotate --to=git@vger.kernel.org --to=gitster@pobox.com'
+alias git-submodule-pullall='git submodule foreach git pull origin master'
+
+alias git-modified='vim `LC_ALL=C git st | grep modified | cut -d: -f2 | sort -u`'
+alias git-modified-diff='vim -p `LC_ALL=C git st | grep modified | grep -v "\.\." | cut -d: -f2 | sort -u` +":tabdo Gdiff" +":tabdo windo set wrap"'
+alias git-last-modified='vim -p `LC_ALL=C git diff --name-only HEAD~ | xargs file | grep " text" | cut -d: -f1`'
+alias git-last-modified-diff='vim -p `LC_ALL=C git diff --name-only HEAD~ | xargs file | grep " text" | cut -d: -f1` +":tabdo Gdiff HEAD~"'
+alias git-both-modified='vim `LC_ALL=C git st | grep "both modified" | cut -d: -f 2`'
+
+# Use vim to view git diff result
+# --no-ext-diff : prevent using other diff tool
+#            -R : start vim in read-only mode
+#             - : make vim act as a pager
+git_diff() {
+    git diff --no-ext-diff "$@" | vim -R +":set list" -
+}
+alias git-diff="git_diff"
+
